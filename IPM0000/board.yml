@@ -1,0 +1,5 @@
+board:
+  name: IPM0000
+  vendor: Noke
+  socs:
+    - name: nrf52832

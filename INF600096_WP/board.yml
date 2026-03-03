@@ -1,0 +1,5 @@
+board:
+  name: INF600096_WP
+  vendor: Noke
+  socs:
+    - name: nrf52832

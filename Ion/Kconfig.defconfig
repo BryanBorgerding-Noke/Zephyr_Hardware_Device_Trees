@@ -1,0 +1,6 @@
+if BOARD_ION
+
+config BT_CTLR
+	default BT
+
+endif # BOARD_ION

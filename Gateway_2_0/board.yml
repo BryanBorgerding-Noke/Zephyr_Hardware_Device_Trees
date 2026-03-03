@@ -1,0 +1,5 @@
+board:
+  name: Gateway_2_0
+  vendor: Noke
+  socs:
+    - name: nrf52840

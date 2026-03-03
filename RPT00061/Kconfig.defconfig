@@ -1,0 +1,6 @@
+if BOARD_RPT00061
+
+config BT_CTLR
+	default BT
+
+endif # BOARD_RPT00061

@@ -1,0 +1,6 @@
+if BOARD_INF600096_WP
+
+config BT_CTLR
+	default BT
+
+endif # BOARD_INF600096_WP

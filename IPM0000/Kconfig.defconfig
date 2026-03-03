@@ -1,0 +1,6 @@
+if BOARD_IPM0000
+
+config BT_CTLR
+	default BT
+
+endif # BOARD_IPM0000

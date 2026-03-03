@@ -1,0 +1,2 @@
+config BOARD_IPM0000
+	select SOC_NRF52832_QFAA

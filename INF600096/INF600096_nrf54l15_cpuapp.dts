@@ -1,0 +1,243 @@
+/dts-v1/;
+#include <nordic/nrf54l15_cpuapp.dtsi>
+#include "INF600096-pinctrl.dtsi"
+
+/ {
+	model = "Noke Infinity BLE Chip";
+	compatible = "Noke,INF600096-cpuapp";
+
+	chosen {
+		zephyr,code-partition = &slot0_partition;
+		zephyr,sram = &cpuapp_sram;
+		zephyr,flash = &cpuapp_rram;
+		zephyr,ieee802154 = &ieee802154;
+	};
+
+	leds {
+		compatible="gpio-leds";
+		led0: led_0 {
+			gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
+			label = "Green LED";
+		};
+		led1: led_1 {
+			gpios = <&gpio2 2 GPIO_ACTIVE_HIGH>;
+			label = "Red LED";
+		};
+		led2: led_2 {
+			gpios = <&gpio2 4 GPIO_ACTIVE_HIGH>;
+			label = "Blue LED";
+		};
+		led3: led_3 {
+			gpios = <&gpio2 1 GPIO_ACTIVE_HIGH>;
+			label = "Motor Drive A ";
+		};
+		led4: led_4 {
+			gpios = <&gpio2 0 GPIO_ACTIVE_HIGH>;
+			label = "Motor Drive B";
+		};
+		led5: led_5 {
+			gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
+			label = "Motor Enable";
+		};
+	};
+
+	buttons {
+		compatible = "gpio-keys";
+		button0: button_0 {
+			gpios = <&gpio1 12 GPIO_ACTIVE_HIGH>;
+			label = "HALL Sensor 0";
+		};
+		button1: button_1 {
+			gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
+			label = "HALL Sensor 1";
+		};
+		button2: button_2 {
+			gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
+			label = "HALL Sensor 3";
+		};
+		button3: button_3 {
+			gpios = <&gpio2 9 GPIO_ACTIVE_HIGH>;
+			label = "Wake button input";
+		};
+	};
+
+	pwmleds {
+		compatible = "pwm-leds";
+
+		pwm_led0: pwm_led_0 {
+			pwms = <&pwm20 0 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
+		};
+	};
+
+	aliases {
+		led-green = &led0;
+		led-red = &led1;
+		led-blue = &led2;
+		motor1 = &led3;
+		motor2 = &led4;
+		hall0 = &button0;
+		hall1 = &button1;
+		hall2 = &button2;
+		buzzer = &pwm_led0;
+		wake = &button3;
+		motor-en = &led5;
+	};
+
+	zephyr,user {
+		io-channels = <&adc 0>, <&adc 1>, <&adc 2>;
+	};
+};
+
+&cpuapp_sram {
+	status = "okay";
+};
+
+&grtc {
+	owned-channels = <0 1 2 3 4 5 6 7 8 9 10 11>;
+	/* Channels 7-11 reserved for Zero Latency IRQs, 3-4 for FLPR */
+	child-owned-channels = <3 4 7 8 9 10 11>;
+	status = "okay";
+};
+
+&cpuapp_rram {
+	partitions {
+		compatible = "fixed-partitions";
+		#address-cells = <1>;
+		#size-cells = <1>;
+		boot_partition: partition@0 {
+			label = "mcuboot";
+			reg = <0x0 DT_SIZE_K(64)>;
+		};
+		slot0_partition: partition@10000 {
+			label = "image-0";
+			reg = <0x10000 DT_SIZE_K(324)>;
+		};
+		slot0_ns_partition: partition@61000 {
+			label = "image-0-nonsecure";
+			reg = <0x61000 DT_SIZE_K(324)>;
+		};
+		slot1_partition: partition@b2000 {
+			label = "image-1";
+			reg = <0xb2000 DT_SIZE_K(324)>;
+		};
+		slot1_ns_partition: partition@103000 {
+			label = "image-1-nonsecure";
+			reg = <0x103000 DT_SIZE_K(324)>;
+		};
+		/* 32k from 0x154000 to 0x15bfff reserved for TF-M partitions */
+		storage_partition: partition@15c000 {
+			label = "storage";
+			reg = <0x15c000 DT_SIZE_K(36)>;
+		};
+	};
+};
+
+&radio {
+	status = "okay";
+};
+
+&ieee802154 {
+	status = "okay";
+};
+
+&regulators {
+	status = "okay";
+};
+
+&vregmain {
+	status = "okay";
+	regulator-initial-mode = <NRF5X_REG_MODE_DCDC>;
+};
+
+&lfxo {
+	load-capacitors = "external";
+};
+
+&hfxo {
+	load-capacitors = "external";
+};
+
+&clock {
+	status = "okay";
+};
+
+&gpio0 {
+	status = "okay";
+};
+
+&gpio1 {
+	status = "okay";
+};
+
+&gpio2 {
+	status = "okay";
+};
+
+&gpiote20 {
+	status = "okay";
+};
+
+&gpiote30 {
+	status = "okay";
+};
+
+&pwm20 {
+	status = "okay";
+	pinctrl-0 = <&pwm20_default>;
+	pinctrl-1 = <&pwm20_sleep>;
+	pinctrl-names = "default", "sleep";
+};
+
+&uart00 {
+	status = "okay";
+	current-speed = <115200>;
+	pinctrl-0 = <&uart00_default>;
+	pinctrl-1 = <&uart00_sleep>;
+	pinctrl-names = "default", "sleep";
+};
+
+&adc {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+	channel@0 {
+		reg = <0>;
+		zephyr,gain = "ADC_GAIN_1_4";
+		zephyr,reference = "ADC_REF_INTERNAL";
+		zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+		zephyr,input-positive = <NRF_SAADC_AIN2>;
+		zephyr,resolution = <14>;
+	};
+	channel@1 {
+		reg = <1>;
+		zephyr,gain = "ADC_GAIN_1_4";
+		zephyr,reference = "ADC_REF_INTERNAL";
+		zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+		zephyr,input-positive = <NRF_SAADC_AIN3>;
+		zephyr,resolution = <14>;
+	};
+	channel@2 {
+		reg =  <2>;
+		zephyr,gain = "ADC_GAIN_1_4";
+		zephyr,reference = "ADC_REF_INTERNAL";
+		zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+		zephyr,input-positive = <NRF_SAADC_AIN0>;
+		zephyr,input-negative = <NRF_SAADC_AIN1>;
+		zephyr,resolution = <14>;
+	};
+};
+
+&i2c30 {
+	compatible = "nordic,nrf-twim";
+	status = "okay";
+	clock-frequency = <I2C_BITRATE_STANDARD>;
+	pinctrl-0 = <&i2c30_default>;
+	pinctrl-1 = <&i2c30_sleep>;
+	pinctrl-names = "default", "sleep";
+
+	accel: accel@19 {
+		compatible = "i2c-device";
+		reg = <0x19>;
+		label = "LIS2DH12TR Accelerometer";
+	};
+};

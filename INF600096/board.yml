@@ -1,0 +1,8 @@
+board:
+  name: INF600096
+  vendor: Noke
+  socs:
+  - name: nrf54l15
+    variants:
+    - name: xip
+      cpucluster: cpuflpr

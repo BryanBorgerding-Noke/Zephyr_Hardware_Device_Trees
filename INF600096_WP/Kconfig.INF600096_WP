@@ -1,0 +1,2 @@
+config BOARD_INF600096_WP
+	select SOC_NRF52832_QFAA
