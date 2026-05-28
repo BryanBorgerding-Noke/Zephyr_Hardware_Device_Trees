@@ -1,0 +1,2 @@
+config BOARD_NDA_01
+	select SOC_NRF52832_QFAA

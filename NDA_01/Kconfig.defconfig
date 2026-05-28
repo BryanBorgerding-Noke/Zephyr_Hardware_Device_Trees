@@ -1,0 +1,6 @@
+if BOARD_NDA_01
+
+config BT_CTLR
+	default BT
+
+endif # BOARD_NDA_01

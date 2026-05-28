@@ -1,0 +1,5 @@
+board:
+  name: NDA_01
+  vendor: Noke
+  socs:
+    - name: nrf52832
