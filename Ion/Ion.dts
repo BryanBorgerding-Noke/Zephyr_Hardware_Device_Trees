@@ -26,13 +26,77 @@
 			gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>;
 			label = "Red LED";
 		};
+		led3: led_3 {
+			gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
+			label = "Red LED";
+		};
+		led4: led_4 {
+			gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
+			label = "Hall Enable";
+		};
+		led5: led_5 {
+			gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
+			label = "Motor Drive A";
+		};
+		led6: led_6 {
+			gpios = <&gpio0 26 GPIO_ACTIVE_HIGH>;
+			label = "Motor Drive B";
+		};
+	};
+
+	pwmleds {
+		compatible = "pwm-leds";
+		pwm_led0: pwm_led0 {
+			pwms = <&pwm0 0 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
+		};
+	};
+
+	buttons {
+		compatible = "gpio-keys";
+		button0: button_0 {
+			gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
+			label = "Motor Position Hall Sensor";
+		};
+		button1: button_1 {
+			gpios = <&gpio0 29 GPIO_ACTIVE_HIGH>;
+			label = "Slider Position 1 Hall Sensor";
+		};
+		button2: button_2 {
+			gpios = <&gpio0 8 GPIO_ACTIVE_HIGH>;
+			label = "Slider Position 2 Hall Sensor";
+		};
+		button3: button_3 {
+			gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>;
+			label = "Hasp Position 1 Hall Sensor";
+		};
+		button4: button_4 {
+			gpios = <&gpio0 11 GPIO_ACTIVE_HIGH>;
+			label = "Hasp Position 2 Hall Sensor";
+		};
 	};
 
 		aliases {
-			led0 = &led0;
-			led1 = &led1;
-			led2 = &led2;
+			nb-de = &led0;
+			hall-en = &led4;
+			led-green = &led1;
+			led-red = &led2;
+			led-blue = &led3;
+			buzzer = &pwm_led0;
+			motor1 = &led5;
+			motor2 = &led6;
+			hall0 = &button0;
+			hall1 = &button1;
+			hall2 = &button2;
+			hall3 = &button0;
+			hall4 = &button4;
 		};
+};
+
+&pwm0 {
+	status = "okay";
+	pinctrl-0 = <&pwm0_default>;
+	pinctrl-1 = <&pwm0_sleep>;
+	pinctrl-names = "default","sleep";
 };
 
 &flash0 {
@@ -77,6 +141,15 @@
 	current-speed = <115200>;
 	pinctrl-0 = <&uart0_default>;
 	pinctrl-1 = <&uart0_sleep>;
+	pinctrl-names = "default", "sleep";
+};
+
+&uart1 {
+	compatible = "nordic,nrf-uarte";
+	status = "okay";
+	current-speed = <115200>;
+	pinctrl-0 = <&uart1_default>;
+	pinctrl-1 = <&uart1_sleep>;
 	pinctrl-names = "default", "sleep";
 };
 
